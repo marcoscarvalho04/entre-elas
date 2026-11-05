@@ -25,3 +25,4 @@ A página é um arquivo só, o `index.html`, publicado pelo GitHub Pages a parti
 |---|---|---|---|
 | `v1` | 05/11/2026 | Primeira versão publicada. Fontes Bodoni Moda e Jost. O cartão vira sozinho e aparece "Veja o seu presente". | `git checkout v1 -- index.html` |
 | `v2` | 05/11/2026 | Página em formato de revista, com a fonte Playfair Display. O botão "Revelar meu presente" abre uma cortina com os 25% off, seguida de quem somos, serviços, condições do cupom e os links do WhatsApp e do Instagram. | `git checkout v2 -- index.html` |
+| `v3` | 05/11/2026 | A v2 com o logo da Lumina no topo, antes das condições do cupom e no rodapé. Imagens embutidas no próprio arquivo. | `git checkout v3 -- index.html` |
