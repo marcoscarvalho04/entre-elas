@@ -1,4 +1,7 @@
-# Só a página publicada vai para o repositório
+# Vão para o repositório só a página, o README e o QR Code
 *
 !index.html
+!README.md
+!qrcode-entre-elas.png
+!qrcode-entre-elas.svg
 !.gitignore
