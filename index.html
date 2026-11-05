@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entre Elas · Lumina Comunicação</title>
+<meta name="description" content="Um presente da Lumina Comunicação para quem participou do Entre Elas. Acenda a luz e descubra o seu.">
+<meta name="theme-color" content="#461312">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wine:#461312; --wine-2:#5a1a18; --wine-3:#2f0c0b; --olive:#CAC76A; --olive-2:#e2df8f; --pink:#ED809D; --pink-2:#f39bb2;
+  --paper:#F5EDE0; --ink:#2a0b0a;
+  --serif:"Bodoni Moda",Didot,"Times New Roman",serif;
+  --sans:"Jost","Futura","Century Gothic",system-ui,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scrollbar-color:var(--wine-2) var(--wine-3)}
+html::-webkit-scrollbar{width:10px}
+html::-webkit-scrollbar-track{background:var(--wine-3)}
+html::-webkit-scrollbar-thumb{background:var(--wine-2);border-radius:10px;border:2px solid var(--wine-3)}
+body{margin:0;min-height:100svh;background:var(--wine);color:var(--paper);font-family:var(--sans);font-size:1.0625rem;line-height:1.6;
+  background-image:radial-gradient(120% 80% at 30% 35%,#5c1b19 0,var(--wine) 55%,var(--wine-3) 100%);background-attachment:fixed}
+::selection{background:var(--pink);color:var(--ink)}
+:focus-visible{outline:2px solid var(--olive);outline-offset:4px;border-radius:4px}
+a,button{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* a primeira tela é só o cartão; o texto e o presente vêm abaixo */
+.stage{position:relative;height:100svh;min-height:520px;touch-action:pan-y;cursor:pointer}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* o cartão desenhado: aparece enquanto o 3D carrega e fica se ele não subir */
+.estatico{position:absolute;inset:0;margin:auto;height:70%;width:auto;max-width:82%;filter:drop-shadow(0 26px 34px rgba(0,0,0,.45));transform:rotate(-2deg)}
+.stage[data-3d] .estatico{display:none}
+/* depois que o cartão vira: o convite para descer até o presente */
+.descer{position:absolute;left:50%;bottom:calc(1.1rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.2rem;
+  padding:.4rem .9rem;text-decoration:none;color:var(--paper);font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.05rem;white-space:nowrap;animation:surge .9s var(--ease) both}
+.descer svg{width:1.5rem;height:1.5rem;color:var(--olive);animation:boia 2.4s ease-in-out infinite}
+.descer:hover svg{color:var(--olive-2)}
+@keyframes boia{50%{transform:translateY(6px)}}
+@keyframes surge{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+.panel{padding-block:4.5rem 3.5rem;padding-left:max(1.25rem,16px,env(safe-area-inset-left,0px));padding-right:max(1.25rem,16px,env(safe-area-inset-right,0px));max-width:38rem;margin:0 auto}
+
+/* tipografia */
+h1,h2{margin:0;text-wrap:balance;font-family:var(--serif);font-weight:800;letter-spacing:-.015em}
+h3{margin:0}
+h1{font-size:clamp(2.4rem,7.2vw,4.1rem);line-height:.98}
+h1 em,h2 em{font-style:italic;font-weight:600;color:var(--pink)}
+h2{font-size:clamp(1.9rem,5.4vw,2.9rem);line-height:1.02}
+h3{font-weight:600;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--olive);margin-bottom:.6rem}
+p{margin:0}
+.lead{margin-top:1.25rem;max-width:36ch;color:rgba(245,237,224,.86)}
+.sign{font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:.78rem;color:var(--olive)}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.65rem;min-height:3.25rem;padding:.85rem 1.6rem;border-radius:999px;
+  border:1px solid transparent;text-decoration:none;cursor:pointer;font-weight:600;font-size:1rem;letter-spacing:.02em;
+  transition:transform .35s var(--ease),background-color .25s,box-shadow .35s var(--ease),border-color .25s}
+.btn svg{width:1.15em;height:1.15em;flex:none}
+@media (max-width:379px){.btn{padding:.85rem .9rem;gap:.5rem;font-size:.875rem;letter-spacing:0}}
+.btn-main{background:var(--pink);color:var(--ink);box-shadow:0 10px 24px -12px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.25)}
+.btn-main:hover{background:var(--pink-2);transform:translateY(-2px);box-shadow:0 16px 30px -14px rgba(0,0,0,.65),0 3px 8px rgba(0,0,0,.28)}
+.btn-main:active{transform:translateY(0)}
+.btn-line{border-color:rgba(245,237,224,.5);color:var(--paper)}
+.btn-line:hover{border-color:var(--paper);background:rgba(245,237,224,.06)}
+
+/* abertura do texto */
+.intro{padding-bottom:3rem;margin-bottom:3rem;border-bottom:1px solid rgba(245,237,224,.16)}
+
+/* presente */
+.presente > * + *{margin-top:1.4rem}
+.presente h2 strong{font-weight:800;color:var(--olive)}
+.ticket{display:flex;align-items:stretch;margin-top:1.75rem;background:var(--paper);color:var(--wine);border-radius:10px;overflow:hidden;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.6);max-width:26rem}
+.ticket b{flex:1;min-width:0;display:flex;align-items:center;padding:.9rem clamp(.8rem,3.5vw,1.15rem);font-size:clamp(1rem,4.6vw,1.3rem);font-weight:600;letter-spacing:clamp(.08em,.9vw,.16em);font-variant-numeric:lining-nums}
+.ticket button{border:0;border-left:1px dashed rgba(70,19,18,.45);background:transparent;color:var(--wine);padding:0 clamp(.85rem,3.5vw,1.2rem);flex:none;cursor:pointer;
+  font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;transition:background-color .25s}
+.ticket button:hover{background:rgba(70,19,18,.07)}
+.ticket button[data-ok]{background:var(--olive)}
+.status{min-height:1.4em;margin-top:.55rem;font-family:var(--serif);font-style:italic;font-size:.95rem;color:var(--olive)}
+.acoes{display:flex;flex-direction:column;gap:.85rem;align-items:stretch;max-width:26rem}
+@media (min-width:480px){.acoes{flex-direction:row;flex-wrap:wrap;align-items:center}}
+.regras{max-width:40ch;font-size:.92rem;line-height:1.55;color:rgba(245,237,224,.8);padding-top:1.4rem;border-top:1px solid rgba(245,237,224,.16)}
+.regras ul{margin:0;padding:0;list-style:none}
+.regras li{position:relative;padding-left:1.15rem}
+.regras li + li{margin-top:.25rem}
+.regras li::before{content:"";position:absolute;left:0;top:.62em;width:.42rem;height:.42rem;background:var(--olive);
+  -webkit-mask:var(--star) center/contain no-repeat;mask:var(--star) center/contain no-repeat}
+:root{--star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C53 30 70 47 100 50C70 53 53 70 50 100C47 70 30 53 0 50C30 47 47 30 50 0Z'/%3E%3C/svg%3E")}
+.quem{padding-top:2.2rem}
+.quem h2{font-size:clamp(1.6rem,4.6vw,2.2rem)}
+.quem p{margin-top:.9rem;max-width:42ch;color:rgba(245,237,224,.84)}
+.servicos{list-style:none;margin:1.3rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.5rem}
+.servicos li{border:1px solid rgba(202,199,106,.45);color:var(--olive-2);border-radius:999px;padding:.35rem .9rem;font-size:.92rem}
+.fecho{margin-top:2.6rem;padding-top:1.2rem;border-top:1px solid rgba(245,237,224,.16);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1.5rem}
+.fecho p{font-family:var(--serif);font-style:italic;color:rgba(245,237,224,.78)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<div class="stage" id="stage" role="img" aria-label="Cartão de visita da Lumina Comunicação para o Entre Elas. Frente em papel claro com uma estrela dourada; verso rosa com o presente de 25% e o cupom ENTREELAS25.">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <svg class="estatico" id="estatico-frente" viewBox="0 0 550 900" aria-hidden="true">
+      <rect x="3" y="3" width="544" height="894" rx="34" fill="#F5EDE0" stroke="#CAC76A" stroke-width="6"/>
+      <text x="275" y="88" text-anchor="middle" font-family="Jost, sans-serif" font-weight="600" font-size="26" letter-spacing="8" fill="#461312">ENTRE ELAS</text>
+      <text x="275" y="124" text-anchor="middle" font-family="Jost, sans-serif" font-weight="600" font-size="21" letter-spacing="3.5" fill="#461312">EDIÇÃO ESPECIAL · 2026</text>
+      <path d="M50 0C53 30 70 47 100 50C70 53 53 70 50 100C47 70 30 53 0 50C30 47 47 30 50 0Z" transform="translate(130 225) scale(2.9)" fill="#CAC76A"/>
+      <text x="275" y="655" text-anchor="middle" font-family="Bodoni Moda, serif" font-weight="800" font-size="108" letter-spacing="2" fill="#461312" stroke="#461312" stroke-width="3.0" stroke-linejoin="round" paint-order="stroke">LUMINA</text>
+      <text x="275" y="712" text-anchor="middle" font-family="Bodoni Moda, serif" font-style="italic" font-weight="600" font-size="50" fill="#a8304f" stroke="#a8304f" stroke-width="1.4" stroke-linejoin="round" paint-order="stroke">Comunicação</text>
+      <text x="275" y="805" text-anchor="middle" font-family="Bodoni Moda, serif" font-style="italic" font-weight="600" font-size="30" fill="#461312" stroke="#461312" stroke-width="1.2" stroke-linejoin="round" paint-order="stroke">A luz por trás</text>
+      <text x="275" y="843" text-anchor="middle" font-family="Bodoni Moda, serif" font-style="italic" font-weight="600" font-size="30" fill="#461312" stroke="#461312" stroke-width="1.2" stroke-linejoin="round" paint-order="stroke">da sua comunicação.</text>
+    </svg>
+    <svg class="estatico" id="estatico-verso" viewBox="0 0 550 900" aria-hidden="true" hidden>
+      <rect x="3" y="3" width="544" height="894" rx="34" fill="#ED809D" stroke="#CAC76A" stroke-width="6"/>
+      <text x="275" y="88" text-anchor="middle" font-family="Jost, sans-serif" font-weight="600" font-size="26" letter-spacing="8" fill="#461312">SEU PRESENTE</text>
+      <text x="255" y="440" text-anchor="middle" font-family="Bodoni Moda, serif" font-weight="800" font-size="320" fill="#461312" stroke="#461312" stroke-width="9.0" stroke-linejoin="round" paint-order="stroke">25</text>
+      <text x="425" y="300" font-family="Bodoni Moda, serif" font-style="italic" font-weight="600" font-size="95" fill="#461312" stroke="#461312" stroke-width="2.7" stroke-linejoin="round" paint-order="stroke">%</text>
+      <text x="425" y="440" font-family="Bodoni Moda, serif" font-style="italic" font-weight="600" font-size="60" fill="#461312" stroke="#461312" stroke-width="1.7" stroke-linejoin="round" paint-order="stroke">off</text>
+      <text x="275" y="528" text-anchor="middle" font-family="Bodoni Moda, serif" font-style="italic" font-weight="600" font-size="32" fill="#2a0b0a" stroke="#2a0b0a" stroke-width="1.2" stroke-linejoin="round" paint-order="stroke">em serviços da</text>
+      <text x="275" y="568" text-anchor="middle" font-family="Bodoni Moda, serif" font-style="italic" font-weight="600" font-size="32" fill="#2a0b0a" stroke="#2a0b0a" stroke-width="1.2" stroke-linejoin="round" paint-order="stroke">Lumina Comunicação</text>
+      <rect x="60" y="625" width="430" height="95" rx="13" fill="#CAC76A"/>
+      <text x="275" y="686" text-anchor="middle" font-family="Jost, sans-serif" font-weight="600" font-size="40" letter-spacing="5" fill="#461312">ENTREELAS25</text>
+      <text x="275" y="795" text-anchor="middle" font-family="Jost, sans-serif" font-weight="500" font-size="22" letter-spacing="4" fill="#461312">VÁLIDO ATÉ 20.11.2026</text>
+      <path d="M50 0C53 30 70 47 100 50C70 53 53 70 50 100C47 70 30 53 0 50C30 47 47 30 50 0Z" transform="translate(252 825) scale(.46)" fill="#CAC76A"/>
+    </svg>
+    <a class="descer" id="descer" href="#conteudo" hidden>Veja o seu presente
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5 9l7 7 7-7"/></svg>
+    </a>
+</div>
+
+<main class="panel" id="conteudo">
+    <section class="intro" aria-labelledby="t-intro">
+      <h1 id="t-intro">Entre elas, <em>toda mulher merece brilhar.</em></h1>
+      <p class="lead">Você chegou até aqui porque existe algo especial esperando por você. Preparamos um presente para celebrar sua coragem de empreender e tudo o que ainda está por vir.</p>
+    </section>
+
+    <section class="presente" id="presente" aria-labelledby="t-presente">
+      <h2 id="t-presente">Parabéns! Você ganhou <strong>25% off</strong> em serviços da Lumina.</h2>
+      <p class="lead">Porque o seu negócio merece uma comunicação à altura de tudo o que você está construindo.</p>
+
+      <div>
+        <div class="ticket">
+          <b id="cupom">ENTREELAS25</b>
+          <button type="button" id="copiar">Copiar</button>
+        </div>
+        <p class="status" id="copiado" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="regras">
+        <h3>Condições do cupom</h3>
+        <ul>
+          <li>Exclusivo para participantes do evento Entre Elas.</li>
+          <li>Válido até 20 de novembro de 2026.</li>
+          <li>Uma utilização por empresa, não cumulativo com outras promoções.</li>
+          <li>Vale para a primeira contratação de serviços elegíveis.</li>
+          <li>Em serviços recorrentes, o desconto vale só para a primeira mensalidade.</li>
+          <li>Contratação sujeita à disponibilidade de agenda e orçamento.</li>
+        </ul>
+      </div>
+
+      <div class="acoes">
+        <a class="btn btn-main" id="wa" target="_blank" rel="noopener" href="https://wa.me/5583991088178">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+          Quero aproveitar meus 25% off
+        </a>
+        <a class="btn btn-line" target="_blank" rel="noopener" href="https://www.instagram.com/luminacomunicacao_/">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M7 2.9h10A4.1 4.1 0 0 1 21.1 7v10a4.1 4.1 0 0 1-4.1 4.1H7A4.1 4.1 0 0 1 2.9 17V7A4.1 4.1 0 0 1 7 2.9Z"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/></svg>
+          Lumina no Instagram
+        </a>
+      </div>
+
+      <div class="quem">
+        <h2>Prazer, somos a <em>Lumina.</em></h2>
+        <p>Somos uma agência de comunicação criativa que acredita que toda marca tem uma história que merece ser contada. Unimos estratégia, criatividade e sensibilidade para transformar ideias em conteúdos que conectam pessoas e fortalecem negócios.</p>
+        <p>Mais do que produzir posts bonitos, queremos construir uma comunicação que faça sentido para quem empreende e para quem está do outro lado da tela.</p>
+        <ul class="servicos" aria-label="Serviços">
+          <li>Gestão de redes sociais</li>
+          <li>Vídeos e Reels</li>
+          <li>Fotografia profissional</li>
+          <li>Conteúdo para marcas</li>
+          <li>Design e soluções criativas</li>
+        </ul>
+      </div>
+
+      <footer class="fecho">
+        <p>A luz por trás da sua comunicação.</p>
+        <span class="sign">Entre Elas · 2026</span>
+      </footer>
+    </section>
+  </main>
+
+<script>
+// O fluxo do presente, o cupom e o WhatsApp: funcionam mesmo se o 3D não carregar.
+// O módulo 3D, quando sobe, troca lumina.cena pela animação do cartão.
+(function () {
+  var frente = document.getElementById("estatico-frente"), verso = document.getElementById("estatico-verso");
+  // SVG não tem a propriedade hidden: o atributo é que esconde
+  var mostrarVerso = function (sim) { frente.toggleAttribute("hidden", sim); verso.toggleAttribute("hidden", !sim); };
+  window.lumina = { revelado: false, cena: {
+    revelar: function (pronto) { mostrarVerso(true); pronto(); },
+    virar: function () { mostrarVerso(verso.hasAttribute("hidden")); }
+  } };
+})();
+(function () {
+  // O cartão acende e vira sozinho; depois aparece o convite para descer até o presente.
+  var descer = document.getElementById("descer");
+  var reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  lumina.revelar = function () {
+    if (lumina.revelado) return;
+    lumina.revelado = true;
+    lumina.cena.revelar(function () { descer.hidden = false; });
+  };
+  // O 3D avisa quando entrou em cena e marca a hora; sem ele, o cartão desenhado vira sozinho.
+  var reserva = setTimeout(lumina.revelar, reduz ? 600 : 4500);
+  lumina.cenaPronta = function (atraso) { clearTimeout(reserva); setTimeout(lumina.revelar, atraso); };
+  // Tocar no cartão desenhado vira o cartão; com o 3D, quem cuida do toque é o módulo.
+  document.getElementById("stage").addEventListener("click", function () {
+    if (lumina.tem3d) return;
+    if (!lumina.revelado) lumina.revelar(); else lumina.cena.virar();
+  });
+})();
+(function () {
+  var numero = "5583991088178";
+  var msg = "Oi, meninas! 💜 Participei do Entre Elas, descobri meu presente e quero aproveitar os 25% OFF da Lumina! Meu cupom é ENTREELAS25. Podemos conversar sobre o meu negócio?";
+  document.getElementById("wa").href = "https://wa.me/" + numero + "?text=" + encodeURIComponent(msg);
+
+  var copiar = document.getElementById("copiar"), saida = document.getElementById("copiado");
+  copiar.addEventListener("click", function () {
+    var codigo = document.getElementById("cupom").textContent;
+    var feito = function () {
+      copiar.textContent = "Copiado"; copiar.setAttribute("data-ok", "");
+      saida.textContent = "Cupom copiado. Ele já vai na mensagem do WhatsApp.";
+      setTimeout(function () { copiar.textContent = "Copiar"; copiar.removeAttribute("data-ok"); saida.textContent = ""; }, 2800);
+    };
+    var manual = function () {
+      var t = document.createElement("textarea");
+      t.value = codigo; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      try { document.execCommand("copy"); feito(); } catch (e) { saida.textContent = "Selecione e copie: " + codigo; }
+      document.body.removeChild(t);
+    };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(codigo).then(feito, manual);
+    else manual();
+  });
+})();
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const COR = { wine: '#461312', olive: '#CAC76A', pink: '#ED809D', paper: '#F5EDE0', ink: '#2a0b0a' };
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (id) => document.getElementById(id);
+
+// O cartão: retrato 55 × 90 mm, em unidades de cena; a textura tem 1000 px por unidade.
+const W = 1.1, H = 1.8, R = 0.07, D = 0.032, PX = 1000;
+const TW = Math.round(W * PX), TH = Math.round(H * PX);
+
+/* ---------- desenho das faces (Canvas 2D) ---------- */
+
+function estrela(ctx, cx, cy, r) {
+  const k = 0.06; // a cintura da estrela: pontas longas, centro fino
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - r);
+  ctx.bezierCurveTo(cx + r * k, cy - r * 0.38, cx + r * 0.38, cy - r * k, cx + r, cy);
+  ctx.bezierCurveTo(cx + r * 0.38, cy + r * k, cx + r * k, cy + r * 0.38, cx, cy + r);
+  ctx.bezierCurveTo(cx - r * k, cy + r * 0.38, cx - r * 0.38, cy + r * k, cx - r, cy);
+  ctx.bezierCurveTo(cx - r * 0.38, cy - r * k, cx - r * k, cy - r * 0.38, cx, cy - r);
+  ctx.closePath();
+}
+
+// Tinta que espalha, como na impressão: com lineWidth > 1, o contorno na mesma cor engrossa os
+// traços finos da Bodoni, que sumiriam quando a textura encolhe na tela do celular.
+function tracar(ctx, texto, x, y) {
+  ctx.fillText(texto, x, y);
+  if (ctx.lineWidth > 1) { ctx.strokeStyle = ctx.fillStyle; ctx.lineJoin = 'round'; ctx.strokeText(texto, x, y); }
+}
+
+function espacado(ctx, texto, x, y, espaco) {
+  const larguras = [...texto].map((c) => ctx.measureText(c).width);
+  const total = larguras.reduce((a, b) => a + b, 0) + espaco * (texto.length - 1);
+  let cx = x - total / 2;
+  const alinhamento = ctx.textAlign;
+  ctx.textAlign = 'left';
+  [...texto].forEach((c, i) => { tracar(ctx, c, cx, y); cx += larguras[i] + espaco; });
+  ctx.textAlign = alinhamento;
+}
+
+function tela() {
+  const c = document.createElement('canvas');
+  c.width = TW; c.height = TH;
+  const ctx = c.getContext('2d');
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  return [c, ctx];
+}
+
+// Fibras do papel: ruído fino e alguns fios, para a luz rasante ter onde pegar.
+function fibras(ctx, base, intensidade) {
+  ctx.fillStyle = base; ctx.fillRect(0, 0, TW, TH);
+  const img = ctx.getImageData(0, 0, TW, TH), d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const n = (Math.random() - 0.5) * intensidade;
+    d[i] += n; d[i + 1] += n; d[i + 2] += n;
+  }
+  ctx.putImageData(img, 0, 0);
+  ctx.globalAlpha = 0.05; ctx.strokeStyle = '#000'; ctx.lineWidth = 1;
+  for (let i = 0; i < 420; i++) {
+    const x = Math.random() * TW, y = Math.random() * TH, a = Math.random() * Math.PI, l = 6 + Math.random() * 22;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+// Mapa de superfície: verde = rugosidade, azul = metal (convenção do three.js).
+// O foil reflete o ambiente: a cor-base é um oliva mais claro que o impresso, para o ouro acender.
+const FOIL = '#eee9a2';
+const PAPEL_SUP = 'rgb(0,225,0)', FOIL_SUP = 'rgb(0,38,255)';
+
+function frente() {
+  const [cor, c] = tela(), [sup, s] = tela(), [rel, r] = tela(), [luz, l] = tela();
+  fibras(c, COR.paper, 10);
+  s.fillStyle = PAPEL_SUP; s.fillRect(0, 0, TW, TH);
+  r.fillStyle = '#808080'; r.fillRect(0, 0, TW, TH);
+  l.fillStyle = '#000'; l.fillRect(0, 0, TW, TH);
+
+  // cabeçalho em versaletes
+  c.fillStyle = COR.wine; c.font = '600 54px "Jost"';
+  espacado(c, 'ENTRE ELAS', TW / 2, 176, 16);
+  c.font = '600 48px "Jost"';
+  espacado(c, 'EDIÇÃO ESPECIAL · 2026', TW / 2, 258, 7);
+
+  // a estrela em hot-foil, com relevo
+  for (const [ctx, cor] of [[c, FOIL], [s, FOIL_SUP], [r, '#b4b4b4']]) {
+    ctx.fillStyle = cor; estrela(ctx, TW / 2, 740, 300); ctx.fill();
+  }
+
+  // assinatura da marca
+  c.fillStyle = COR.wine; c.font = '800 214px "Bodoni Moda"'; c.lineWidth = 9;
+  espacado(c, 'LUMINA', TW / 2, 1310, 4);
+  r.fillStyle = '#5a5a5a'; r.font = c.font; espacado(r, 'LUMINA', TW / 2, 1310, 4);
+  c.fillStyle = '#a8304f'; c.font = 'italic 600 100px "Bodoni Moda"'; c.lineWidth = 4.5;
+  tracar(c, 'Comunicação', TW / 2, 1426);
+
+  c.fillStyle = COR.wine; c.font = 'italic 600 62px "Bodoni Moda"'; c.lineWidth = 3.5;
+  tracar(c, 'A luz por trás', TW / 2, 1610);
+  tracar(c, 'da sua comunicação.', TW / 2, 1688);
+  c.lineWidth = 1;
+
+  // marca d'água: só aparece quando a luz acende atrás do papel
+  l.filter = 'blur(26px)'; l.fillStyle = '#fff3d6'; l.font = '800 480px "Bodoni Moda"';
+  l.fillText('25', TW / 2, 1010);
+  l.filter = 'blur(6px)'; l.globalAlpha = 0.8; l.fillText('25', TW / 2, 1010);
+  l.filter = 'none'; l.globalAlpha = 1;
+  return { cor, sup, rel, luz };
+}
+
+function verso() {
+  const [cor, c] = tela(), [sup, s] = tela(), [rel, r] = tela();
+  fibras(c, COR.pink, 12);
+  s.fillStyle = 'rgb(0,210,0)'; s.fillRect(0, 0, TW, TH);
+  r.fillStyle = '#808080'; r.fillRect(0, 0, TW, TH);
+
+  c.fillStyle = COR.wine; c.font = '600 54px "Jost"';
+  espacado(c, 'SEU PRESENTE', TW / 2, 176, 16);
+
+  // o 25 em letterpress: tinta vinho e o papel afundado
+  c.font = '800 640px "Bodoni Moda"'; c.fillText('25', TW / 2 - 40, 880);
+  r.fillStyle = '#3c3c3c'; r.font = c.font; r.fillText('25', TW / 2 - 40, 880);
+  c.font = 'italic 600 190px "Bodoni Moda"'; c.textAlign = 'left'; c.lineWidth = 6;
+  tracar(c, '%', TW / 2 + 300, 600);
+  c.font = 'italic 600 120px "Bodoni Moda"'; c.lineWidth = 4.5; tracar(c, 'off', TW / 2 + 300, 880);
+  c.textAlign = 'center';
+
+  c.fillStyle = COR.ink; c.font = 'italic 600 64px "Bodoni Moda"'; c.lineWidth = 3.5;
+  tracar(c, 'em serviços da', TW / 2, 1050);
+  tracar(c, 'Lumina Comunicação', TW / 2, 1130);
+  c.lineWidth = 1;
+
+  // a placa do cupom em foil, com o código afundado
+  const px = 120, py = 1250, pw = TW - 240, ph = 190, pr = 26;
+  for (const [ctx, cor] of [[c, FOIL], [s, FOIL_SUP], [r, '#b0b0b0']]) {
+    ctx.fillStyle = cor; ctx.beginPath(); ctx.roundRect(px, py, pw, ph, pr); ctx.fill();
+  }
+  c.fillStyle = COR.wine; c.font = '600 82px "Jost"';
+  espacado(c, 'ENTREELAS25', TW / 2, py + 124, 10);
+  r.fillStyle = '#6a6a6a'; r.font = c.font; espacado(r, 'ENTREELAS25', TW / 2, py + 124, 10);
+
+  c.fillStyle = COR.wine; c.font = '500 46px "Jost"';
+  espacado(c, 'VÁLIDO ATÉ 20.11.2026', TW / 2, 1590, 8);
+
+  for (const [ctx, cor] of [[c, FOIL], [s, FOIL_SUP]]) { ctx.fillStyle = cor; estrela(ctx, TW / 2, 1690, 46); ctx.fill(); }
+  return { cor, sup, rel };
+}
+
+/* ---------- o fluxo, com ou sem 3D ---------- */
+
+const cena = window.lumina.cena;
+
+await Promise.all([
+  document.fonts.load('800 100px "Bodoni Moda"'),
+  document.fonts.load('italic 600 100px "Bodoni Moda"'),
+  document.fonts.load('600 40px "Jost"'),
+  document.fonts.load('500 40px "Jost"'),
+]).catch(() => {});
+
+const F = frente(), V = verso();
+const stage = $('stage'), gl = $('gl');
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas: gl, antialias: true, alpha: true, powerPreference: 'high-performance' });
+} catch (e) { renderer = null; }
+
+if (renderer && !window.lumina.revelado) iniciar(renderer);
+else { gl.hidden = true; if (!window.lumina.revelado) window.lumina.cenaPronta(reduz ? 300 : 1200); }
+
+function iniciar(renderer) {
+  stage.dataset['3d'] = '';
+  window.lumina.tem3d = true;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.0;
+
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = 1.0;
+
+  const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 50);
+  const aniso = renderer.capabilities.getMaxAnisotropy();
+  const tex = (canvas, srgb) => {
+    const t = new THREE.CanvasTexture(canvas);
+    t.anisotropy = aniso;
+    if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  };
+
+  // a forma com cantos arredondados, para o miolo e para as duas faces
+  const forma = new THREE.Shape();
+  const x0 = -W / 2, y0 = -H / 2;
+  forma.moveTo(x0 + R, y0);
+  forma.lineTo(x0 + W - R, y0); forma.quadraticCurveTo(x0 + W, y0, x0 + W, y0 + R);
+  forma.lineTo(x0 + W, y0 + H - R); forma.quadraticCurveTo(x0 + W, y0 + H, x0 + W - R, y0 + H);
+  forma.lineTo(x0 + R, y0 + H); forma.quadraticCurveTo(x0, y0 + H, x0, y0 + H - R);
+  forma.lineTo(x0, y0 + R); forma.quadraticCurveTo(x0, y0, x0 + R, y0);
+
+  const miolo = new THREE.ExtrudeGeometry(forma, { depth: D, bevelEnabled: false, curveSegments: 16 });
+  miolo.translate(0, 0, -D / 2);
+  const borda = new THREE.MeshPhysicalMaterial({ color: COR.olive, metalness: 1, roughness: 0.32, clearcoat: 0.4 });
+  const corpo = new THREE.Mesh(miolo, [new THREE.MeshBasicMaterial({ color: COR.paper }), borda]);
+
+  const faceGeo = new THREE.ShapeGeometry(forma, 16);
+  const uv = faceGeo.attributes.uv, pos = faceGeo.attributes.position;
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, (pos.getX(i) + W / 2) / W, (pos.getY(i) + H / 2) / H);
+
+  const matFrente = new THREE.MeshPhysicalMaterial({
+    map: tex(F.cor, true), roughnessMap: tex(F.sup), metalnessMap: tex(F.sup), roughness: 1, metalness: 1,
+    bumpMap: tex(F.rel), bumpScale: 1.6, emissive: new THREE.Color('#ffcf8a'), emissiveMap: tex(F.luz, true), emissiveIntensity: 0,
+    sheen: 0.35, sheenRoughness: 0.8, sheenColor: new THREE.Color('#fff6e8'),
+  });
+  const matVerso = new THREE.MeshPhysicalMaterial({
+    map: tex(V.cor, true), roughnessMap: tex(V.sup), metalnessMap: tex(V.sup), roughness: 1, metalness: 1,
+    bumpMap: tex(V.rel), bumpScale: 1.8, envMapIntensity: 0.55, color: new THREE.Color(0.84, 0.8, 0.82),
+  });
+  const faceF = new THREE.Mesh(faceGeo, matFrente); faceF.position.z = D / 2 + 0.0006;
+  const faceV = new THREE.Mesh(faceGeo, matVerso); faceV.rotation.y = Math.PI; faceV.position.z = -D / 2 - 0.0006;
+
+  const cartao = new THREE.Group();
+  cartao.add(corpo, faceF, faceV);
+  const suporte = new THREE.Group(); // balanço e inclinação; o cartão gira dentro dele
+  suporte.add(cartao);
+  scene.add(suporte);
+
+  // a luz por trás: um halo quente e uma luz que contorna a borda dourada
+  const halo = (() => {
+    const [c, ctx] = [document.createElement('canvas'), null];
+    c.width = c.height = 256;
+    const g = c.getContext('2d'), grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+    grad.addColorStop(0, 'rgba(255,232,222,1)'); grad.addColorStop(0.35, 'rgba(237,128,157,.32)'); grad.addColorStop(1, 'rgba(237,128,157,0)');
+    g.fillStyle = grad; g.fillRect(0, 0, 256, 256);
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex(c, true), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.22 }));
+    s.position.set(0, 0.05, -0.55); s.scale.set(1.8, 2.2, 1);
+    return s;
+  })();
+  scene.add(halo);
+
+  const contraluz = new THREE.PointLight('#ffe2d6', 0, 4, 2); contraluz.position.set(0, 0.1, -0.6); scene.add(contraluz);
+  const chave = new THREE.DirectionalLight('#fff4e6', 1.8); chave.position.set(-1.6, 2.2, 3); scene.add(chave);
+  const reflexo = new THREE.PointLight('#fff0d0', 3, 6, 2); reflexo.position.set(0.15, 0.35, 2.4); scene.add(reflexo);
+  const ceu = new THREE.HemisphereLight('#ffe9e0', '#2a0b0a', 0.5); scene.add(ceu);
+
+  // partículas de luz: estrelinhas que sobem quando o presente aparece
+  const pontos = (() => {
+    const n = reduz ? 0 : 140, geo = new THREE.BufferGeometry(), p = new Float32Array(n * 3), v = new Float32Array(n);
+    for (let i = 0; i < n; i++) { p[i * 3] = (Math.random() - 0.5) * 3.6; p[i * 3 + 1] = (Math.random() - 0.5) * 3; p[i * 3 + 2] = -0.9 + Math.random() * 1.4; v[i] = 0.04 + Math.random() * 0.1; }
+    geo.setAttribute('position', new THREE.BufferAttribute(p, 3));
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.shadowColor = '#fff'; g.shadowBlur = 8; estrela(g, 32, 32, 26); g.fill();
+    const mat = new THREE.PointsMaterial({ size: 0.05, map: tex(c, true), color: '#e2df8f', transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+    const obj = new THREE.Points(geo, mat); obj.userData.v = v; scene.add(obj);
+    return obj;
+  })();
+
+  /* ---------- enquadramento ---------- */
+  function ajustar() {
+    const { clientWidth: w, clientHeight: h } = stage;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    const meio = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const porAltura = (H * 1.45) / 2 / meio, porLargura = (W * 1.45) / 2 / meio / camera.aspect;
+    camera.position.set(0, 0, Math.max(porAltura, porLargura));
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(ajustar).observe(stage);
+  ajustar();
+
+  /* ---------- interação: arrastar gira, tocar vira ---------- */
+  const estado = { giro: 0, alvo: 0, vel: 0, arrasto: null, tiltX: 0, tiltY: 0, mx: 0, my: 0, luz: 0, luzAlvo: 0, sombra: 0, sombraAlvo: 0 };
+  const ladoMaisPerto = (a) => Math.round(a / Math.PI) * Math.PI;
+
+  stage.addEventListener('pointermove', (e) => {
+    const r = stage.getBoundingClientRect();
+    estado.mx = ((e.clientX - r.left) / r.width) * 2 - 1;
+    estado.my = ((e.clientY - r.top) / r.height) * 2 - 1;
+    if (estado.arrasto) {
+      const dx = e.clientX - estado.arrasto.x;
+      estado.arrasto.mov = Math.max(estado.arrasto.mov, Math.abs(dx));
+      estado.alvo = estado.arrasto.inicio + dx * 0.012;
+    }
+  });
+  stage.addEventListener('pointerdown', (e) => {
+    estado.arrasto = { x: e.clientX, inicio: estado.alvo, mov: 0, t: performance.now() };
+    stage.setPointerCapture(e.pointerId);
+  });
+  const soltar = () => {
+    const a = estado.arrasto; estado.arrasto = null;
+    if (!a) return;
+    if (a.mov < 6 && performance.now() - a.t < 350) {
+      if (!window.lumina.revelado) window.lumina.revelar(); else cena.virar();
+      return;
+    }
+    estado.alvo = ladoMaisPerto(estado.alvo);
+  };
+  stage.addEventListener('pointerup', soltar);
+  stage.addEventListener('pointercancel', soltar);
+  stage.addEventListener('pointerleave', () => { estado.mx = 0; estado.my = 0; });
+
+  cena.virar = () => { estado.alvo = ladoMaisPerto(estado.alvo) + Math.PI; };
+  cena.revelar = (pronto) => {
+    estado.luzAlvo = 1;
+    if (reduz) { estado.luz = 1; estado.alvo = ladoMaisPerto(estado.alvo) + Math.PI; pronto(); return; }
+    // a sala escurece e a luz acende atrás: o 25% atravessa o papel; então o cartão vira e mostra o cupom
+    estado.sombraAlvo = 1;
+    setTimeout(() => { estado.sombraAlvo = 0; estado.alvo = ladoMaisPerto(estado.alvo) + Math.PI * 3; }, 1700);
+    setTimeout(pronto, 2500);
+  };
+
+  /* ---------- quadro a quadro ---------- */
+  const relogio = new THREE.Clock();
+  let entrada = reduz ? 1 : 0;
+  function quadro() {
+    const dt = Math.min(relogio.getDelta(), 0.05), t = relogio.elapsedTime;
+    entrada = Math.min(1, entrada + dt * 0.7);
+    const e = 1 - Math.pow(1 - entrada, 4);
+
+    // mola para o giro: chega rápido e assenta sem sacudir
+    const k = estado.arrasto ? 40 : 14, amort = estado.arrasto ? 12 : 6.2;
+    estado.vel += ((estado.alvo - estado.giro) * k - estado.vel * amort) * dt;
+    estado.giro += estado.vel * dt;
+    cartao.rotation.y = estado.giro;
+
+    estado.tiltX += (estado.my * 0.16 - estado.tiltX) * Math.min(1, dt * 4);
+    estado.tiltY += (estado.mx * 0.22 - estado.tiltY) * Math.min(1, dt * 4);
+    suporte.rotation.x = estado.tiltX + (reduz ? 0 : Math.sin(t * 0.7) * 0.035);
+    suporte.rotation.y = estado.tiltY + (reduz ? 0 : Math.sin(t * 0.45) * 0.06) + (1 - e) * -0.9;
+    suporte.rotation.z = reduz ? -0.035 : -0.035 + Math.sin(t * 0.5) * 0.012;
+    suporte.position.y = (reduz ? 0 : Math.sin(t * 0.8) * 0.018) - (1 - e) * 0.25;
+
+    // a luz por trás
+    estado.luz += (estado.luzAlvo - estado.luz) * Math.min(1, dt * 1.6);
+    const L = estado.luz;
+    estado.sombra += (estado.sombraAlvo - estado.sombra) * Math.min(1, dt * 3);
+    const S = estado.sombra;
+    matFrente.emissiveIntensity = L * (0.5 + S * 2) * (0.92 + 0.08 * Math.sin(t * 3));
+    contraluz.intensity = L * (4 + S * 8);
+    chave.intensity = 1.8 * (1 - S * 0.95);
+    reflexo.intensity = 3 * (1 - S * 0.95);
+    ceu.intensity = 0.5 * (1 - S * 0.9);
+    scene.environmentIntensity = 1 - S * 0.9;
+    halo.material.opacity = 0.2 + L * 0.32;
+    halo.scale.set(1.8 + L * 0.3, 2.2 + L * 0.2, 1);
+
+    // o brilho que acompanha o dedo ou o mouse, para o foil cintilar
+    // em repouso o brilho passeia devagar, para o foil cintilar também no toque e sem mouse
+    const deriva = reduz ? 0 : Math.sin(t * 0.35) * 0.55;
+    reflexo.position.x += (estado.mx * 1.4 + deriva + 0.15 - reflexo.position.x) * Math.min(1, dt * 3);
+    reflexo.position.y += (-estado.my * 1.2 + 0.35 - reflexo.position.y) * Math.min(1, dt * 3);
+
+    if (pontos.geometry.attributes.position.count) {
+      const p = pontos.geometry.attributes.position, v = pontos.userData.v;
+      for (let i = 0; i < p.count; i++) {
+        let y = p.getY(i) + v[i] * dt * (0.4 + L);
+        if (y > 1.6) y = -1.6;
+        p.setY(i, y);
+      }
+      p.needsUpdate = true;
+      pontos.material.opacity = L * 0.6;
+    }
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(quadro);
+  }
+  requestAnimationFrame(quadro);
+  // o cartão entra, assenta um instante e então a luz acende
+  window.lumina.cenaPronta(reduz ? 300 : 2400);
+}
+</script>
+</body>
+</html>

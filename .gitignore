@@ -1,0 +1,4 @@
+# Só a página publicada vai para o repositório
+*
+!index.html
+!.gitignore
