@@ -24,3 +24,4 @@ A página é um arquivo só, o `index.html`, publicado pelo GitHub Pages a parti
 | Versão | Data | O que é | Como recuperar |
 |---|---|---|---|
 | `v1` | 05/11/2026 | Primeira versão publicada. Fontes Bodoni Moda e Jost. O cartão vira sozinho e aparece "Veja o seu presente". | `git checkout v1 -- index.html` |
+| `v2` | 05/11/2026 | Página em formato de revista, com a fonte Playfair Display. O botão "Revelar meu presente" abre uma cortina com os 25% off, seguida de quem somos, serviços, condições do cupom e os links do WhatsApp e do Instagram. | `git checkout v2 -- index.html` |
